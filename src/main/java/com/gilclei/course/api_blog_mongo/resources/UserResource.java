@@ -1,6 +1,8 @@
 package com.gilclei.course.api_blog_mongo.resources;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gilclei.course.api_blog_mongo.domain.User;
+import com.gilclei.course.api_blog_mongo.dto.UserDTO;
 import com.gilclei.course.api_blog_mongo.services.UserService;
 
 @RestController
@@ -19,9 +22,10 @@ public class UserResource {
 	private UserService service;
 	
 	@GetMapping
-	private ResponseEntity<List<User>> findAll(){
+	private ResponseEntity<List<UserDTO>> findAll(){
 		List<User> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDto);
 		
 	}
 
